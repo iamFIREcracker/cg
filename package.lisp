@@ -1,4 +1,4 @@
-(defpackage #:cx
+(defpackage #:cg
   (:use #:cl)
   (:export
     :define-extractor

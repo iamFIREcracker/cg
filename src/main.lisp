@@ -1,4 +1,4 @@
-(in-package #:cx)
+(in-package #:cg)
 
 (defvar *extractors* NIL "A list of command extractors; the default argument to `extract'.")
 

@@ -12,19 +12,19 @@ get_tmux_option() {
 }
 
 find_executable() {
-  if type fcx >/dev/null 2>&1; then
-    echo "fcx"
+  if type fcg >/dev/null 2>&1; then
+    echo "fcg"
   fi
 }
 
-readonly key="$(get_tmux_option "@fcx-key" "m")"
+readonly key="$(get_tmux_option "@fcg-key" "m")"
 readonly cmd="$(find_executable)"
 
 if [ -z "$cmd" ]; then
-  tmux display-message "Failed to load tmux-fcx: fcx was not found on the PATH"
+  tmux display-message "Failed to load tmux-fcg: fcg was not found on the PATH"
 else
   tmux bind-key "$key" capture-pane -J \\\; \
     save-buffer "${TMPDIR:-/tmp}/tmux-buffer" \\\; \
     delete-buffer \\\; \
-    send-keys -t . " sh -c 'cat \"${TMPDIR:-/tmp}/tmux-buffer\" | fcx'" Enter
+    send-keys -t . " sh -c 'cat \"${TMPDIR:-/tmp}/tmux-buffer\" | fcg'" Enter
 fi

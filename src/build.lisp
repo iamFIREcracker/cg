@@ -1,6 +1,6 @@
-(ql:quickload :cx :silent t)
+(ql:quickload :cg :silent t)
 
 (setf deploy:*status-output* nil)
 
 (let ((deploy:*status-output* t))
-  (asdf:make :cx :force t))
+  (asdf:make :cg :force t))

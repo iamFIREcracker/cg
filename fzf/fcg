@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+fcg() {
+  local cmd
+  cmd=$(cg | fzf) && sh -c "echo $cmd; $cmd"
+}
+fcg

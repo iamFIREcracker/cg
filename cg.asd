@@ -1,4 +1,4 @@
-(asdf:defsystem #:cx
+(asdf:defsystem #:cg
   :description "Matteo's command extractor"
 
   :author "Matteo Landi <matteo@matteolandi.net>"
@@ -10,8 +10,8 @@
 
   :defsystem-depends-on (:deploy)
   :build-operation "deploy-op"
-  :build-pathname "cx"
-  :entry-point "cx:toplevel"
+  :build-pathname "cg"
+  :entry-point "cg:toplevel"
 
   :serial t
   :components ((:file "package")
