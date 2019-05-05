@@ -2,6 +2,6 @@
 
 fcg() {
   local cmd
-  cmd=$(cg | fzf) && sh -c "echo $cmd; $cmd"
+  cmd=$(cg | fzf) && sh -c "echo $cmd" && sh -c "$cmd"
 }
 fcg
