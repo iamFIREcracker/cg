@@ -27,6 +27,12 @@
     ("^kill ([0-9]+)" (pid))
   (format NIL "kill -9 '~a'" pid))
 
+(define-extractor br
+    ;; https://gist.github.com/gruber/249502
+    ("((?i)\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’])))"
+     (url))
+  (format NIL "br '~a' " url))
+
 (defun extract (line &optional (extractors (reverse *extractors*)))
   (loop
     :for fn :in extractors
