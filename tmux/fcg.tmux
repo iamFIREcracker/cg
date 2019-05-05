@@ -17,7 +17,7 @@ find_executable() {
   fi
 }
 
-readonly key="$(get_tmux_option "@fcg-key" "m")"
+readonly key="$(get_tmux_option "@fcg-key" "Enter")"
 readonly cmd="$(find_executable)"
 
 if [ -z "$cmd" ]; then
