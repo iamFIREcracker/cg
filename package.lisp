@@ -1,5 +1,5 @@
 (defpackage #:cg
   (:use #:cl)
   (:export
-    :define-extractor
+    :define-generator
     :toplevel))

@@ -1,5 +1,5 @@
 (asdf:defsystem #:cg
-  :description "Matteo's command extractor"
+  :description "Matteo's command generator"
 
   :author "Matteo Landi <matteo@matteolandi.net>"
   :license  "MIT"
