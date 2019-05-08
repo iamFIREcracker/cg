@@ -13,7 +13,7 @@ bin:
 	mkdir -p bin
 
 binary-sbcl: bin
-	/usr/local/bin/sbcl --noinform --load "src/build.lisp"
+	sbcl --noinform --load "src/build.lisp"
 
 binary: binary-sbcl
 
