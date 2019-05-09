@@ -17,5 +17,5 @@ binary-sbcl: bin
 
 binary: binary-sbcl
 
-bin/brows: $(lisps) Makefile
+bin/cg: $(lisps) Makefile
 	make binary-sbcl
