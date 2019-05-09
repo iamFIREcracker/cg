@@ -1,7 +1,12 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 fcg() {
-  local cmd
-  cmd=$(cg | fzf) && sh -c "echo $cmd" && sh -c "$cmd"
+  local commands
+
+  IFS=$'\n' commands=($(cg | fzf --multi --exit-0))
+  for cmd in ${commands[@]}; do
+    echo $cmd
+    bash -c "$cmd"
+  done
 }
 fcg
