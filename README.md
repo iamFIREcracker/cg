@@ -7,7 +7,7 @@ Guess commands to run from stdin, and print them to stdout.
 Few years ago I stumbled upon [fpp](https://facebook.github.io/PathPicker),
 a nice utility that would scan its input looking for possible pathnames, and
 present you with a terminal UI to select which ones to open / send to an
-external command; in a nut-shell, the
+external command;  in a nut-shell, the
 [urlview](https://github.com/sigpipe/urlview) for local files.
 
 Wouldn't it be nice if there was a similar program that could guess which
@@ -34,10 +34,10 @@ Anyway:
   together will be incompatible with other Common Lisp implementations
 - Get yourself Quicklisp
 - Get a snapshot of this repository and `ql:quickload` it
-- Run `make` -- if it fails complaining about DEPLOY, try and run `(ql:quickload
-  :deploy)` first
+- Run `make` -- if it fails complaining about `DEPLOY`, try and run
+  `sbcl --noinform --eval "(ql:quickload :deploy)" --eval "(quit)"` first
 
-If everything run successfully you should find `cg` under '$cgrepo/bin/'; if
+If everything run successfully you should find `cg` under '$cgrepo/bin/';  if
 not then...good luck with that!
 
 # Usage
@@ -59,8 +59,8 @@ output some commands you most likely would want to run next:
 
 But first, you will have to teach `cg` how to guess commands.
 
-While starting up, `cg` will try to read "~/.cgrc", looking for _command
-guesser_ definitions; a _guesser_ is defined with the `DEFINE-GUESSER` macro as
+While starting up, `cg` will try to read "~/.cgrc" looking for _command
+guesser_ definitions;  a _guesser_ is defined with the `DEFINE-GUESSER` macro as
 follows:
 
 ```
@@ -71,19 +71,20 @@ follows:
 
 Where:
 
-- the first argument is the name of the guesser -- `kill-kill9` is mnemonic for
+- the first argument is the name of the guesser -- `kill-kill9`, mnemonic for
   something that transforms `kill` commands into `kill -9` ones)
 - the second argument is a form defining what text the guesser is able to guess
-  commands from; the first argument is a regular expression (`cg`
+  commands from;  the first element is a regular expression (`cg`
   uses [cl-ppcre](https://edicl.github.io/cl-ppcre/) internally), while the
-  second another list, listing any group that you might have defined in the
+  second is another list, listing any group that you might have defined in the
   regular expression -- in our case we defined a single group for the Process ID
-- finally, one or multiple forms, the last one of which should return a string
-  representing the guessed command -- `kill -9 '$PID'` in our case
+  to `kill`
+- finally, one or multiple forms, the last one of which is expected to return
+  a string representing the guessed command -- `kill -9 '$PID'` in our case
 
 Currently, `cg` moves to the next input line as soon as one of the defined
 guessers successfully guesses a command, but please note that I am still
-dogfooding this and this logic, as well as the `DEFINE-GUESSER` API, might
+dogfooding it, and this logic as well as the `DEFINE-GUESSER` API might
 change in case I or you found it not so easy to work with.
 
 Also, if you are curious to see how I am using `cg`, take a look at my
@@ -91,11 +92,29 @@ Also, if you are curious to see how I am using `cg`, take a look at my
 
 ## Execute one of the guessed commands
 
-I did not bother implementing a Terminal UI to select and execute one of the
-guessed commands;  instead, I built some wrappers for:
+So far we taught `cg` how to guess commands;  but what about selecting one of
+the suggestions, and run it?  Well, I did not bother implementing a Terminal UI
+for this;  instead, I opted to ship `cg` with an adapter for fzf:
+[cg-fzf](./fzf/cg-fzf).
 
-- fzf --  see: [cg-fzf](./fzf/cg-fzf)
-- dmenu -- see [cg-dmenu](./dmenu/cg-dmenu)
+Hopefully, it should not take you long to implement adapters for other programs
+(below you can find one for `dmenu`), but `fzf` is what I am using these days,
+so that's what I will try to support going forward.
+
+```
+#!/usr/bin/env bash
+
+cg-dmenu() {
+  local commands
+
+  IFS=$'\n' commands=($(cg | dmenu))
+  for cmd in ${commands[@]}; do
+    echo $cmd
+    bash -c "$cmd"
+  done
+}
+cg-dmenu
+```
 
 # Extras
 
@@ -110,21 +129,21 @@ stands for...) to re-run the last command and pipe its output into into `cg-fzf`
     # Pipe last command to fmcp with C-G
     "\C-g": "!-1 | cg-fzf\015"
 
-Where:
+For those unfamiliar with the syntax:
 
 - `\C-g` is the key shortcut
 - `!-1` pulls from `history` the last command
 - `\015` is the return key
 
-So say you had just run `git branch -v`; if you then pressed `C-g`, `readline`
-will pass to your terminal `!-1 | cfg` which will then evaluate to and run `git
-branch -v | cfg`!
+So say you had just run `git branch -v`;  if you then pressed `C-g`, `readline`
+will pass to your terminal `!-1 | cfg` which will then evaluate to (and run)
+`git branch -v | cfg`!
 
 ## Tmux
 
 If you use `tmux`, you might want to add the following to your ".tmux.conf":
 
-    set -g @cg-key 'Enter'
+    set -g @cg-key 'g'
     set -g @cg-cmd 'cg-fzf'
     run-shell ~/opt/cg/tmux/cg.tmux
 
@@ -132,10 +151,11 @@ That will configure `tmux` so that, when `PrefixKey + g` is pressed ('g'
 again..seriously?!), `cg-fzf` is started and the content of the current pane is
 piped into it.
 
-This might come in really handy when dealing with commands that do not output the same
-message the second time you run them (e.g. the first time you `git push`
-a branch on GitHub, it will output a URL to create a pull request for the
-branch;  the second time however, it won't).
+This might come in really handy when dealing with commands that do not output
+the same message the second time you run them (e.g. the first time you `git
+push` a branch on GitHub, it will output a URL to create a pull request for the
+branch;  the second time however, it won't, so the `readline` trick I explained
+above won't work in that case).
 
 # Todo
 
@@ -145,4 +165,4 @@ branch;  the second time however, it won't).
 - strip escape sequences (colors)
 - enhance DEFINE-GUESSER to extract documentation from the definition,
   and...maybe run it?  A la python's docstring
-- simplify `cg-fzf` to use `xargs` instead -- xargs -t -I {} bash -c {}
+- simplify `cg-fzf` to use `xargs` instead -- `xargs -t -I {} bash -c {}`
