@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-fcg() {
+cg-fzf() {
   local commands
 
   IFS=$'\n' commands=($(cg | fzf --multi --exit-0))
@@ -9,4 +9,4 @@ fcg() {
     bash -c "$cmd"
   done
 }
-fcg
+cg-fzf
