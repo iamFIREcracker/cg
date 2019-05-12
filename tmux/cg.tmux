@@ -28,5 +28,5 @@ else
   tmux bind-key "$key" capture-pane -J \\\; \
     save-buffer "${TMPDIR:-/tmp}/tmux-buffer" \\\; \
     delete-buffer \\\; \
-    send-keys -t . " sh -c 'cat \"${TMPDIR:-/tmp}/tmux-buffer\" | fcg'" Enter
+    send-keys -t . " sh -c 'cat \"${TMPDIR:-/tmp}/tmux-buffer\" | $exe'" Enter
 fi

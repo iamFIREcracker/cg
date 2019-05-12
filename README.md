@@ -12,8 +12,8 @@ external command; in a nut-shell, the
 
 Wouldn't it be nice if there was a similar program that could guess which
 command to run next, by looking at its input?  For example, you pipe `git log
--n`'s output into it, and it would output a bunch of "git show $sha1", "git show
-$sha2", "git show $sha3" entries, one per log entry;  or you pipe into it `ps
+-n ...`'s output into it, and it would output a bunch of "git show $sha1", "git show
+$sha2", "git show $sha3" lines (one per log entry);  or you pipe into it `ps
 aux`'s output, and it would ask you which process to kill.
 
 _enters `cg`.._
@@ -30,18 +30,74 @@ it's the first time you hear about Common Lisp.
 Anyway:
 
 - Get yourself a SBCL -- apologies, it's the only Common Lips implementation that
-  I tested this with, but hopefully none of those 30 locs are incompatible with
-  other Common Lisp implementations
+  I tested this with, but hopefully none of those 30 locs I managed to put
+  together will be incompatible with other Common Lisp implementations
 - Get yourself Quicklisp
 - Get a snapshot of this repository and `ql:quickload` it
-- Run `make`
+- Run `make` -- if it fails complaining about DEPLOY, try and run `(ql:quickload
+  :deploy)` first
 
-If everything run successfully, you should find `cg` under '$cgrepo/bin/'; if
-not, good luck with that!
+If everything run successfully you should find `cg` under '$cgrepo/bin/'; if
+not then...good luck with that!
 
 # Usage
 
-XXX
+Using `cg` is really simple: you just pipe some text into it, and it will
+output some commands you most likely would want to run next:
+
+    > git l
+    224d33a Fix some copy-pasta (HEAD -> master, origin/master) (by Matteo Landi)
+    6fb3f7b Add support for multi item selection (by Matteo Landi)
+    56c332c Do not specify sbcl full path (by Matteo Landi)
+    ...
+
+    > g l | cg
+    git show '224d33a' # Fix some copy-pasta (HEAD -> master, origin/master) (by Matteo Landi)
+    git show '6fb3f7b' # Add support for multi item selection (by Matteo Landi)
+    git show '56c332c' # Do not specify sbcl full path (by Matteo Landi)
+    ...
+
+But first, you will have to teach `cg` how to guess commands.
+
+While starting up, `cg` will try to read "~/.cgrc", looking for _command
+guesser_ definitions; a _guesser_ is defined with the `DEFINE-GUESSER` macro as
+follows:
+
+```
+(cg:define-guesser kill-kill9
+    ("kill ([0-9]+)" (pid))
+  (format NIL "kill -9 '~a'" pid))
+```
+
+Where:
+
+- the first argument is the name of the guesser -- `kill-kill9` is mnemonic for
+  something that transforms `kill` commands into `kill -9` ones)
+- the second argument is a form defining what text the guesser is able to guess
+  commands from; the first argument is a regular expression (`cg`
+  uses [cl-ppcre](https://edicl.github.io/cl-ppcre/) internally), while the
+  second another list, listing any group that you might have defined in the
+  regular expression -- in our case we defined a single group for the Process ID
+- finally, one or multiple forms, the last one of which should return a string
+  representing the guessed command -- `kill -9 '$PID'` in our case
+
+Currently, `cg` moves to the next input line as soon as one of the defined
+guessers successfully guesses a command, but please note that I am still
+dogfooding this and this logic, as well as the `DEFINE-GUESSER` API, might
+change in case I or you found it not so easy to work with.
+
+Also, if you are curious to see how I am using `cg`, take a look at my
+[.cgrc](https://github.com/iamFIREcracker/dotfiles/blob/master/.cgrc) file.
+
+## Execute one of the guessed commands
+
+I did not bother implementing a Terminal UI to select and execute one of the
+guessed commands;  instead, I built some wrappers for:
+
+- fzf --  see: [cg-fzf](./fzf/cg-fzf)
+- dmenu -- see [cg-dmenu](./dmenu/cg-dmenu)
+
+# Extras
 
 ## GNU Readline
 
@@ -49,10 +105,10 @@ Piping one command's output into another command is a lot of fun, but a lot
 of typing too.
 
 Add the following to your '.inputrc' to bind `C-G` (guess what 'g'
-stands for...) to re-run the last command and pipe its output into into `fcg`:
+stands for...) to re-run the last command and pipe its output into into `cg-fzf`:
 
     # Pipe last command to fmcp with C-G
-    "\C-g": "!-1 | fcg\015"
+    "\C-g": "!-1 | cg-fzf\015"
 
 Where:
 
@@ -68,11 +124,12 @@ branch -v | cfg`!
 
 If you use `tmux`, you might want to add the following to your ".tmux.conf":
 
-    set -g @fcg-key 'g'
-    run-shell $cgrepo/tmux/fcg.tmux
+    set -g @cg-key 'Enter'
+    set -g @cg-cmd 'cg-fzf'
+    run-shell ~/opt/cg/tmux/cg.tmux
 
 That will configure `tmux` so that, when `PrefixKey + g` is pressed ('g'
-again..seriously?!), `fcg` is started and the content of the current pane is
+again..seriously?!), `cg-fzf` is started and the content of the current pane is
 piped into it.
 
 This might come in really handy when dealing with commands that do not output the same
@@ -80,26 +137,12 @@ message the second time you run them (e.g. the first time you `git push`
 a branch on GitHub, it will output a URL to create a pull request for the
 branch;  the second time however, it won't).
 
-# Examples
-
-    > git l
-    224d33a Fix some copy-pasta (HEAD -> master, origin/master) (by Matteo Landi)
-    6fb3f7b Add support for multi item selection (by Matteo Landi)
-    56c332c Do not specify sbcl full path (by Matteo Landi)
-    ...
-
-    > g l | cg
-    git show '224d33a' # Fix some copy-pasta (HEAD -> master, origin/master) (by Matteo Landi)
-    git show '6fb3f7b' # Add support for multi item selection (by Matteo Landi)
-    git show '56c332c' # Do not specify sbcl full path (by Matteo Landi)
-    ...
-
-XXX
-
-
 # Todo
 
-- support multiple guesses per line, and multiple guesses per `GUESSER`
+- replace `LOAD` ?!
+- support multiple guesses per line, and multiple guesses per...guesser
 - remove duplicate suggestions
-- Strip escape sequences (colors)
-- Simplify `fcg` to use `xargs` instead
+- strip escape sequences (colors)
+- enhance DEFINE-GUESSER to extract documentation from the definition,
+  and...maybe run it?  A la python's docstring
+- simplify `cg-fzf` to use `xargs` instead -- xargs -t -I {} bash -c {}
