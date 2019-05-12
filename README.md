@@ -159,10 +159,18 @@ above won't work in that case).
 
 # Todo
 
-- replace `LOAD` ?!
+- replace `LOAD`?!
 - support multiple guesses per line, and multiple guesses per...guesser
 - remove duplicate suggestions
 - strip escape sequences (colors)
-- enhance DEFINE-GUESSER to extract documentation from the definition,
+- enhance `DEFINE-GUESSER` to extract documentation from the definition,
   and...maybe run it?  A la python's docstring
 - simplify `cg-fzf` to use `xargs` instead -- `xargs -t -I {} bash -c {}`
+
+# Changelog
+
+0.0.1 (2019-05-12)
+
+- Load guessers from "~/.cgrc" -- use `DEFINE-GUESSER`
+- One command guessed per line
+- One command guessed per guesser
