@@ -1,21 +1,22 @@
 .PHONY: vendor clean binary-sbcl binary
 
+quicklisp := vendor/quicklisp.lisp
+lisps := $(shell find .  -type f \( -iname \*.asd -o -iname \*.lisp \))
+
 all: binary
 
 # Clean -----------------------------------------------------------------------
 clean:
-	rm -rf bin
+	rm -rf bin $(quicklisp)
 
 # Build -----------------------------------------------------------------------
-lisps := $(shell find .  -type f \( -iname \*.asd -o -iname \*.lisp \))
-
 bin:
 	mkdir -p bin
 
-binary-sbcl: bin
+$(quicklisp):
+	curl -o $@ -O https://beta.quicklisp.org/quicklisp.lisp
+
+binary-sbcl: bin $(quicklisp) $(lisps)
 	sbcl --noinform --load "src/build.lisp"
 
 binary: binary-sbcl
-
-bin/cg: $(lisps) Makefile
-	make binary-sbcl
