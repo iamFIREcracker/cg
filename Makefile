@@ -14,6 +14,7 @@ bin:
 	mkdir -p bin
 
 $(quicklisp):
+	mkdir -p vendor
 	curl -o $@ -O https://beta.quicklisp.org/quicklisp.lisp
 
 binary-sbcl: bin $(quicklisp) $(lisps)
