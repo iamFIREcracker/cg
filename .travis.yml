@@ -1,3 +1,7 @@
+os:
+  - linux
+  - osx
+
 language: common-lisp
 sudo: required
 
@@ -6,3 +10,13 @@ install:
 
 script:
   - make binary-ros
+
+deploy:
+  provider: releases
+  api_key:
+    secure: oM5Vb6V/JfHMmd0xfoARMNV5hYFR75OI5ftaXZlkiJYyUbxwCLh9HarsTdNO/a3niLWVV/ZIazzayA9v+fiOdP03x3dbMLSqFo5Rou/yaa/3Ve83GbnS62r9q5NBvAi/r+4eYachnNUXwngCjeIXuD8mkkK9iGESbB9j3DX24ut2MCI+gz1K0aXwxq7vELX0EMlRdX7b1Mf8hcYugmPy5fOVS8VqYf/BalKPzzNHmiD1IO3qmPR35LZ4Re54jtjxWUUkPQwlA1m7VnpWSgkv6XgfTM716rOxXDoNRIwVTQpf11S9vVu//4BluAYZcMqqwFd4V+MQgl6OwGILQEzJnrcibNOL0/8eBO/rQ34Zk3Ae6ROmlzmOa+fIjkOUhPyF3vgGXcBXna8Ti1FmprA0Le02B4i+79h5n3BcE5pLK7P96FI15efLpVspTnoN+b7NWzKmAz96/YoZTI91l7q6veTo0z5XjlQ3U7gNWGUBeJiNBShDw/gi0lhhr56y+yCcgzpYoFo2DxqshFliBbXTxhNFBRkY0/j0Y94FlRk5+Bw8769Z5cTshGtLxNcAuNfKLvhEnSR+GF3QL6Wvo9JW1UmtJBgyndWCKX7L8AikeawfgUCHYAnylD5l/1XJPO5WhZbrMjiHhLz7lMc5+kfA6tM2bIQ5BRYgjhP18KQf2Fo=
+  file: bin/cg
+  on:
+    repo: iamFIREcracker/cg
+    tags: false
+    all_branches: true
