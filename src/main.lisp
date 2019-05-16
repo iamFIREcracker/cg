@@ -20,8 +20,34 @@
 (defun load-rc ()
   (load "~/.cgrc"))
 
+(opts:define-opts
+  (:name :help
+         :description "print this help text and exit"
+         :short #\h
+         :long "help")
+  (:name :version
+         :description "print the version and exit"
+         :short #\v
+         :long "version"))
+
+(defun parse-opts ()
+  (multiple-value-bind (options)
+      (opts:get-opts)
+    (if (getf options :help)
+      (progn
+        (opts:describe
+          :prefix "Usage:"
+          :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
+        (opts:exit)))
+    (if (getf options :version)
+      (let* ((system (asdf:find-system :cg nil))
+             (version (asdf:component-version system)))
+        (format T "~a~%" version)
+        (opts:exit)))))
+
 (defun toplevel ()
   (loop
+    :initially (parse-opts)
     :initially (load-rc)
     :for line = (read-line NIL NIL :eof)
     :until (eq line :eof)

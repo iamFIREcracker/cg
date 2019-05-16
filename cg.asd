@@ -8,7 +8,7 @@
 
   :depends-on (#:cl-ppcre)
 
-  :defsystem-depends-on (:deploy)
+  :defsystem-depends-on (:deploy :unix-opts)
   :build-operation "deploy-op"
   :build-pathname "cg"
   :entry-point "cg:toplevel"
