@@ -11,15 +11,6 @@
      (pushnew ',name *guessers*)
      ',name))
 
-(defun guess (line &optional (guessers (reverse *guessers*)))
-  (loop
-    :for fn :in guessers
-    :for command = (funcall fn line)
-    :when command :return it))
-
-(defun load-rc ()
-  (load "~/.cgrc"))
-
 (opts:define-opts
   (:name :help
          :description "print this help text and exit"
@@ -37,13 +28,22 @@
       (progn
         (opts:describe
           :prefix "Usage:"
-          :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
+          :args "[keywords]")
         (opts:exit)))
     (if (getf options :version)
       (let* ((system (asdf:find-system :cg nil))
              (version (asdf:component-version system)))
         (format T "~a~%" version)
         (opts:exit)))))
+
+(defun load-rc ()
+  (load "~/.cgrc"))
+
+(defun guess (line &optional (guessers (reverse *guessers*)))
+  (loop
+    :for fn :in guessers
+    :for command = (funcall fn line)
+    :when command :return it))
 
 (defun toplevel ()
   (loop
