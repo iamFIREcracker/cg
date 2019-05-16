@@ -6,7 +6,7 @@
 
   :version "0.0.1"
 
-  :depends-on (#:cl-ppcre)
+  :depends-on (#:cl-ppcre #:unix-opts)
 
   :defsystem-depends-on (:deploy)
   :build-operation "deploy-op"
