@@ -169,6 +169,10 @@ above won't work in that case).
 
 # Changelog
 
+Next
+
+- Add support for command line options: -h/--help, -v/--version
+
 0.0.1 (2019-05-12)
 
 - Load guessers from "~/.cgrc" -- use `DEFINE-GUESSER`
