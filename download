@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# curl --silent https://api.github.com/repos/iamFIREcracker/cg/releases/latest \
+#        | grep "browser_download_url.*deb" \
+#        | cut -d : -f 2,3 \
+#        | tr -d \" \
+#        | wget -qi -
+
+curl --silent https://api.github.com/repos/iamFIREcracker/cg/releases/latest
