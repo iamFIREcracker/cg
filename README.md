@@ -171,7 +171,11 @@ above won't work in that case).
 
 Next
 
-- Add support for command line options: -h/--help, -v/--version
+- Add support for command line options:
+
+    -h, --help               print the help text and exit
+    -v, --version            print the version and exit
+    -d, --debug              parse the RC file (in verbose mode) and exit
 
 0.0.1 (2019-05-12)
 
