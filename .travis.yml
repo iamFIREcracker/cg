@@ -14,11 +14,7 @@ matrix:
         - DEST=cg.exe
 
 install:
-  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then
-      echo "NOT SUPPORTED YET!"
-    else
-      curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
-    fi
+  - sh ./install-for-ci.sh
 
 script:
   - make binary-ros
