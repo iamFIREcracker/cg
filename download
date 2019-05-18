@@ -7,7 +7,7 @@ case $(uname -rs) in
     BIN_REMOTE=cg-osx
     BIN_LOCAL=cg
     ;;
-  *Microsoft|CYGWIN|MINGW*)
+  *Microsoft*|*CYGWIN*|*MINGW*)
     BIN_REMOTE=cg.exe
     BIN_LOCAL=cg.exe
     ;;
