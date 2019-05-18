@@ -1,5 +1,6 @@
 (in-package #:cg)
 
+(defvar *version* NIL "Application version")
 (defvar *guessers* NIL "A list of command guessers; the default argument to `guess'.")
 
 (defmacro define-guesser (name (regexp group-list) &body body)
@@ -13,7 +14,7 @@
 
 (opts:define-opts
   (:name :help
-         :description "print this help text and exit"
+         :description "print the help text and exit"
          :short #\h
          :long "help")
   (:name :version
@@ -23,17 +24,20 @@
 
 (defun parse-opts ()
   (multiple-value-bind (options)
-      (opts:get-opts)
+    (handler-case
+        (opts:get-opts)
+      (opts:unknown-option (condition)
+        (format t "~s option is unknown!~%" (opts:option condition))
+        (opts:exit 1)))
     (if (getf options :help)
       (progn
         (opts:describe
-          :prefix "Usage:"
+          :prefix "Guess commands to run from stdin, and print them to stdout."
           :args "[keywords]")
         (opts:exit)))
     (if (getf options :version)
-      (let* ((system (asdf:find-system :cg nil))
-             (version (asdf:component-version system)))
-        (format T "~a~%" version)
+      (progn
+        (format T "~a~%" *version*)
         (opts:exit)))))
 
 (defun load-rc ()
