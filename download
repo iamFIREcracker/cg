@@ -1,9 +1,24 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-# curl --silent https://api.github.com/repos/iamFIREcracker/cg/releases/latest \
-#        | grep "browser_download_url.*deb" \
-#        | cut -d : -f 2,3 \
-#        | tr -d \" \
-#        | wget -qi -
+set -ex
 
-curl --silent https://api.github.com/repos/iamFIREcracker/cg/releases/latest
+case $(uname -rs) in
+  *Darwin*)
+    BIN_REMOTE=cg-osx
+    BIN_LOCAL=cg
+    ;;
+  *Microsoft|CYGWIN*)
+    BIN_REMOTE=cg.exe
+    BIN_LOCAL=cg.exe
+    ;;
+  *)
+    BIN_REMOTE=cg-linux
+    BIN_LOCAL=cg
+    ;;
+esac
+
+curl --silent https://api.github.com/repos/iamFIREcracker/cg/releases/latest \
+       | grep "browser_download_url.*$BIN_REMOTE" \
+       | cut -d : -f 2,3 \
+       | tr -d \" \
+       | xargs -I {} curl --location {} --output bin/$BIN_LOCAL
