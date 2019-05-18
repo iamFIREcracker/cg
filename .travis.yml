@@ -14,11 +14,15 @@ matrix:
       language: shell
       filter_secretes: false # goddammit, windows!
       env:
-        - PATH=/tmp/roswell:$PATH
+        - PATH=$PATH:/tmp/roswell
         - DEST=cg.exe
 
 install:
-  - sh ./install-for-ci.sh
+  - sh ./roswell-install-for-ci.sh
+  - |
+    if [ "$TRAVIS_OS_NAME" = "windows" ]; then
+      choco install make
+    fi
 
 script:
   - make binary-ros
