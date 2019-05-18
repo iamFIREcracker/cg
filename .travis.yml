@@ -12,7 +12,7 @@ matrix:
         - DEST=cg-osx
     - os: windows
       # filter_secretes: false # damn it!
-      language: generic
+      language: shell
       env:
         - DEST=cg.exe
 
