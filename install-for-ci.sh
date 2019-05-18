@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-if [ "$TRAVIS_OS_NAME" == "windows" ]; then
+if [ "$TRAVIS_OS_NAME" = "windows" ]; then
   # Install: make
   curl -L "https://sourceforge.net/projects/ezwinports/files/make-4.2.1-without-guile-w32-bin.zip/download" \
       --output /tmp/make.zip
