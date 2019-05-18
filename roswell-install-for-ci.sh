@@ -11,4 +11,4 @@ fi
 # Run roswell's CI script, and since it will find `ros` already available
 # in $PATH, it would not try to build it but instead will install the specified
 # CL implementation + quicklisp
-curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
+curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
