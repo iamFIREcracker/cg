@@ -1,12 +1,13 @@
 language: common-lisp
-sudo: required
 
 matrix:
   include:
     - os: linux
+      sudo: required
       env:
         - DEST=cg-linux
     - os: osx
+      sudo: required
       env:
         - DEST=cg-osx
     - os: windows
