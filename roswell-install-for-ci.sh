@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 
-echo $(uname -s)
-echo $(uname -vr)
-OS_WIN=$(uname -s | grep -e MINGW)
+OS_WIN=$(uname -s | grep -e MSYS_NT)
 
 if [ -n "$OS_WIN" ]; then
   curl -L "https://ci.appveyor.com/api/projects/snmsts/roswell-en89n/artifacts/Roswell-x86_64.zip?branch=master&job=Environment%3A%20MSYS2_ARCH%3Dx86_64,%20MSYS2_BITS%3D64,%20MSYSTEM%3DMINGW64,%20METHOD%3Dcross" \
