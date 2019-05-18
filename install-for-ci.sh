@@ -1,7 +1,5 @@
 #!/usr/bin/env sh
 
-set -x
-
 if [ "$TRAVIS_OS_NAME" = "windows" ]; then
   # Install: make
   curl -L "https://sourceforge.net/projects/ezwinports/files/make-4.2.1-without-guile-w32-bin.zip/download" \
@@ -13,6 +11,8 @@ if [ "$TRAVIS_OS_NAME" = "windows" ]; then
       --output /tmp/roswell.zip
   unzip -n /tmp/roswell.zip -d /tmp/ # there is a `roswell` toplevel directory already
   export PATH="/tmp/roswell:$PATH"
+
+  echo $PATH
 fi
 
 # Run roswell's CI script, and since it will find `ros` already available
