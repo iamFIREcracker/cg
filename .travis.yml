@@ -2,14 +2,14 @@ language: generic
 
 matrix:
   include:
-    - os: linux
-      sudo: required
-      env:
-        - DEST=cg-linux
-    - os: osx
-      sudo: required
-      env:
-        - DEST=cg-osx
+    # - os: linux
+    #   sudo: required
+    #   env:
+    #     - DEST=cg-linux
+    # - os: osx
+    #   sudo: required
+    #   env:
+    #     - DEST=cg-osx
     - os: windows
       language: shell
       filter_secretes: false # goddammit, windows!

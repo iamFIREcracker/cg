@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+echo $(uname -s)
+echo $(uname -vr)
 OS_WIN=$(uname -s | grep -e MINGW)
 
 if [ -n "$OS_WIN" ]; then
