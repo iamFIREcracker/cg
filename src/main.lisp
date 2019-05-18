@@ -12,6 +12,9 @@
      (pushnew ',name *guessers*)
      ',name))
 
+(defun load-rc (&key (debug NIL))
+  (load "~/.cgrc" :print debug))
+
 (opts:define-opts
   (:name :help
          :description "print the help text and exit"
@@ -20,7 +23,11 @@
   (:name :version
          :description "print the version and exit"
          :short #\v
-         :long "version"))
+         :long "version")
+  (:name :debug
+         :description "parse the RC file and exit"
+         :short #\d
+         :long "debug"))
 
 (defun parse-opts ()
   (multiple-value-bind (options)
@@ -38,10 +45,11 @@
     (if (getf options :version)
       (progn
         (format T "~a~%" *version*)
+        (opts:exit)))
+    (if (getf options :debug)
+      (progn
+        (load-rc :debug T)
         (opts:exit)))))
-
-(defun load-rc ()
-  (load "~/.cgrc"))
 
 (defun guess (line &optional (guessers (reverse *guessers*)))
   (loop
