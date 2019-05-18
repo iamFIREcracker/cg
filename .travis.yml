@@ -3,19 +3,30 @@ sudo: required
 
 matrix:
   include:
-    - os: linux
-      env: BIN=cg-linux
-    - os: osx
-      env: BIN=cg-osx
+    # - os: linux
+    #   env:
+    #     - DEST=cg-linux
+    # - os: osx
+    #   env:
+    #     - DEST=cg-osx
+    - os: windows
+      env:
+        - DEST=cg.exe
 
 install:
-  - curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then
+      echo "NOT SUPPORTED YET!"
+    else
+      curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
+    fi
 
 script:
   - make binary-ros
 
 before_deploy:
-  - mv bin/cg bin/$BIN
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then
+      mv bin/cg bin/$BIN
+    fi
 
 deploy:
   provider: releases
