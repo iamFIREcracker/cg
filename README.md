@@ -7,13 +7,13 @@ Guess commands to run from stdin, and print them to stdout.
 Few years ago I stumbled upon [fpp](https://facebook.github.io/PathPicker),
 a nice utility that would scan its input looking for possible pathnames, and
 present you with a terminal UI to select which ones to open / send to an
-external command;  in a nut-shell, the
+external command; in a nut-shell, the
 [urlview](https://github.com/sigpipe/urlview) for local files.
 
 Wouldn't it be nice if there was a similar program that could guess which
 command to run next, by looking at its input?  For example, you pipe `git log
 -n ...`'s output into it, and it would output a bunch of "git show $sha1", "git show
-$sha2", "git show $sha3" lines (one per log entry);  or you pipe into it `ps
+$sha2", "git show $sha3" lines (one per log entry); or you pipe into it `ps
 aux`'s output, and it would ask you which process to kill.
 
 _enters `cg`.._
@@ -27,20 +27,49 @@ Bash scripts), `cg` is written in Common Lisp (stop it already!), so getting
 your hands on it might not be as easy as you hoped it would, especially if
 it's the first time you hear about Common Lisp.
 
-Anyway:
+Anyway, you have to options:
 
-- Get yourself a SBCL -- apologies, it's the only Common Lips implementation that
-  I tested this with, but hopefully none of those 30 locs I managed to put
-  together will be incompatible with other Common Lisp implementations
-- Get yourself Quicklisp
-- Get a snapshot of this repository and `ql:quickload` it
-- Run `make` -- if it fails complaining about `DEPLOY`, try and run
-  `sbcl --noinform --eval "(ql:quickload :deploy)" --eval "(quit)"` first
+- Compile binary from sources
+- Download a pre-compiled binary
 
-If everything run successfully you should find `cg` under '$cgrepo/bin/';  if
-not then...good luck with that!
+## Compile
+
+- Get yourself a [SBCL](http://www.sbcl.org/) -- apologies, it's the only Common
+  Lips implementation that I tested this with, but hopefully none of those 30
+  locs I managed to put together will be incompatible with other Common Lisp
+  implementations
+- Get yourself a [Quicklisp](https://www.quicklisp.org/beta/)
+- Clone this repo
+- Run `make`
+
+If everything run smoothly, a shiny little `cg` should have appeared under
+'$cgrepo/bin/'; if not then, you can try downloading one of the pre-compiled
+binaries.
+
+## Download
+
+Each new tag ships with pre-compiled binaries for:
+
+- Linux (tested on: Ubuntu 18.04 x64)
+- macOS (tested on: Sierra)
+- Windwos (tested on: Cygwin, MINGW, and LWM)
+
+You can manually download which one you need, or you can run the following:
+
+    ./download
+
+It will guess your OS, download the pre-compiled binary, place it inside 'bin',
+and make it executable.
 
 # Usage
+
+    > cg -h
+    Guess commands to run from stdin, and print them to stdout.
+
+    Available options:
+      -h, --help               print the help text and exit
+      -v, --version            print the version and exit
+      -d, --debug              parse the RC file and exit
 
 Using `cg` is really simple: you just pipe some text into it, and it will
 output some commands you most likely would want to run next:
@@ -60,7 +89,7 @@ output some commands you most likely would want to run next:
 But first, you will have to teach `cg` how to guess commands.
 
 While starting up, `cg` will try to read "~/.cgrc" looking for _command
-guesser_ definitions;  a _guesser_ is defined with the `DEFINE-GUESSER` macro as
+guesser_ definitions; a _guesser_ is defined with the `DEFINE-GUESSER` macro as
 follows:
 
 ```
@@ -74,7 +103,7 @@ Where:
 - the first argument is the name of the guesser -- `kill-kill9`, mnemonic for
   something that transforms `kill` commands into `kill -9` ones)
 - the second argument is a form defining what text the guesser is able to guess
-  commands from;  the first element is a regular expression (`cg`
+  commands from; the first element is a regular expression (`cg`
   uses [cl-ppcre](https://edicl.github.io/cl-ppcre/) internally), while the
   second is another list, listing any group that you might have defined in the
   regular expression -- in our case we defined a single group for the Process ID
@@ -92,9 +121,9 @@ Also, if you are curious to see how I am using `cg`, take a look at my
 
 ## Execute one of the guessed commands
 
-So far we taught `cg` how to guess commands;  but what about selecting one of
+So far we taught `cg` how to guess commands; but what about selecting one of
 the suggestions, and run it?  Well, I did not bother implementing a Terminal UI
-for this;  instead, I opted to ship `cg` with an adapter for fzf:
+for this; instead, I opted to ship `cg` with an adapter for fzf:
 [cg-fzf](./fzf/cg-fzf).
 
 Hopefully, it should not take you long to implement adapters for other programs
@@ -135,7 +164,7 @@ For those unfamiliar with the syntax:
 - `!-1` pulls from `history` the last command
 - `\015` is the return key
 
-So say you had just run `git branch -v`;  if you then pressed `C-g`, `readline`
+So say you had just run `git branch -v`; if you then pressed `C-g`, `readline`
 will pass to your terminal `!-1 | cfg` which will then evaluate to (and run)
 `git branch -v | cfg`!
 
@@ -154,7 +183,7 @@ piped into it.
 This might come in really handy when dealing with commands that do not output
 the same message the second time you run them (e.g. the first time you `git
 push` a branch on GitHub, it will output a URL to create a pull request for the
-branch;  the second time however, it won't, so the `readline` trick I explained
+branch; the second time however, it won't, so the `readline` trick I explained
 above won't work in that case).
 
 # Todo
@@ -173,9 +202,13 @@ Next
 
 - Add support for command line options:
 
+```
     -h, --help               print the help text and exit
     -v, --version            print the version and exit
     -d, --debug              parse the RC file (in verbose mode) and exit
+```
+
+- Add pre-compiled binaries for each release
 
 0.0.1 (2019-05-12)
 
