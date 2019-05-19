@@ -198,7 +198,7 @@ above won't work in that case).
 
 # Changelog
 
-Next
+0.1.0 (2019-05-19)
 
 - Add support for command line options:
 
