@@ -17,6 +17,7 @@ case $(uname -rs) in
     ;;
 esac
 
+mkdir -p bin
 curl --silent https://api.github.com/repos/iamFIREcracker/cg/releases/latest \
        | grep "browser_download_url.*$BIN_REMOTE" \
        | cut -d : -f 2,3 \
