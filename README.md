@@ -190,13 +190,16 @@ above won't work in that case).
 
 - replace `LOAD`?!
 - support multiple guesses per line, and multiple guesses per...guesser
-- remove duplicate suggestions
 - strip escape sequences (colors)
 - enhance `DEFINE-GUESSER` to extract documentation from the definition,
   and...maybe run it?  A la python's docstring
 - simplify `cg-fzf` to use `xargs` instead -- `xargs -t -I {} bash -c {}`
 
 # Changelog
+
+Next
+
+- Don't output duplicate suggestions
 
 0.1.0 (2019-05-19)
 

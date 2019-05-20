@@ -57,11 +57,18 @@
     :for command = (funcall fn line)
     :when command :return it))
 
-(defun toplevel ()
+(defun process-input ()
   (loop
-    :initially (parse-opts)
-    :initially (load-rc)
-    :for line = (read-line NIL NIL :eof)
-    :until (eq line :eof)
-    :for command = (guess line)
-    :when command :do (format T "~a~%" command)))
+      :with seen = (make-hash-table :test 'equal)
+      :for line = (read-line NIL NIL :eof)
+      :until (eq line :eof)
+      :for command = (guess line)
+      :when (and command (not (gethash command seen)))
+      :do (progn
+            (setf (gethash command seen) T)
+            (format T "~a~%" command))))
+
+(defun toplevel ()
+  (parse-opts)
+  (load-rc)
+  (process-input))
