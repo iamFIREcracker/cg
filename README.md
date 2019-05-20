@@ -194,6 +194,9 @@ above won't work in that case).
 - enhance `DEFINE-GUESSER` to extract documentation from the definition,
   and...maybe run it?  A la python's docstring
 - simplify `cg-fzf` to use `xargs` instead -- `xargs -t -I {} bash -c {}`
+- reverse output before piping it into fzf (or use fzf's `--tac`) so that, when
+  using tmux, suggestions from the most recent command, would appear first (i.e.
+  closest to fzf prompt)
 
 # Changelog
 
