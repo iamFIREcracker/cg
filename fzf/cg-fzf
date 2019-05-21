@@ -3,7 +3,7 @@
 cg-fzf() {
   local commands
 
-  IFS=$'\n' commands=($(cg | fzf --multi --exit-0))
+  IFS=$'\n' commands=($(cg | fzf --no-sort --multi --exit-0))
   for cmd in ${commands[@]}; do
     echo $cmd
     bash -c "$cmd"
