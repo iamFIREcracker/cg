@@ -200,9 +200,12 @@ above won't work in that case).
 
 # Changelog
 
-Next
+0.2.0 (2019-05-21)
 
 - Don't output duplicate suggestions
+- Fix a bug where the download script would fail if ./bin directory was misisng
+- `chmox +x` downloaded binaries
+- Stop `fzf` from sorting `cg`'s output
 
 0.1.0 (2019-05-19)
 
