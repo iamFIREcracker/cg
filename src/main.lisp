@@ -59,14 +59,14 @@
 
 (defun process-input ()
   (loop
-      :with seen = (make-hash-table :test 'equal)
-      :for line = (read-line NIL NIL :eof)
-      :until (eq line :eof)
-      :for command = (guess line)
-      :when (and command (not (gethash command seen)))
-      :do (progn
-            (setf (gethash command seen) T)
-            (format T "~a~%" command))))
+    :with seen = (make-hash-table :test 'equal)
+    :for line = (read-line NIL NIL :eof)
+    :until (eq line :eof)
+    :for command = (guess line)
+    :when (and command (not (gethash command seen)))
+    :do (progn
+          (setf (gethash command seen) T)
+          (format T "~a~%" command))))
 
 (defun toplevel ()
   (parse-opts)
