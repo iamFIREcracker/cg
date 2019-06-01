@@ -172,11 +172,19 @@ will pass to your terminal `!-1 | cfg` which will then evaluate to (and run)
 
 If you use `tmux`, you might want to add the following to your ".tmux.conf":
 
-    set -g @cg-key 'g'
-    set -g @cg-cmd 'cg-fzf'
-    run-shell ~/opt/cg/tmux/cg.tmux
+    tmux bind-key "g" capture-pane -J \\\; \
+      save-buffer "${TMPDIR:-/tmp}/tmux-buffer" \\\; \
+      delete-buffer \\\; \
+      send-keys -t . " sh -c 'cat \"${TMPDIR:-/tmp}/tmux-buffer\" | cg-fzf'" Enter
 
-That will configure `tmux` so that, when `PrefixKey + g` is pressed ('g'
+Or even better, the following in case you had
+[tmux-externalpipe](https://github.com/iamFIREcracker/tmux-externalpipe)
+installed:
+
+    set -g @externalpipe-cg-cmd      'cg-fzf'
+    set -g @externalpipe-cg-key      'g'
+
+Either one will configure `tmux` so that, when `PrefixKey + g` is pressed ('g'
 again..seriously?!), `cg-fzf` is started and the content of the current pane is
 piped into it.
 
@@ -199,6 +207,12 @@ above won't work in that case).
   closest to fzf prompt)
 
 # Changelog
+
+Next
+
+- Removed tmux plugin -- use
+  [tmux-externalpipe](https://github.com/iamFIREcracker/tmux-externalpipe)
+  instead
 
 0.2.0 (2019-05-21)
 
