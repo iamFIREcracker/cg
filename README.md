@@ -194,11 +194,30 @@ push` a branch on GitHub, it will output a URL to create a pull request for the
 branch; the second time however, it won't, so the `readline` trick I explained
 above won't work in that case).
 
+# Extras
+
+## Strip escape sequences (colors)
+
+Sometimes some of your *guessers* would not match because the text you piped
+into `cg` contained one or more escape sequences (usually used for colors);
+well, in that case try to strop them out before passing control to `cg`.
+
+If using `bash`, you could add the following to your "~/.bashrc":
+
+```
+function strip-sequences {
+  perl -pe 's/\e\[?.*?[\@-~]//g'
+}
+```
+
+And then you will be able to use `strip-sequences` as follows:
+
+    > g l | strip-sequences | cg
+
 # Todo
 
 - replace `LOAD`?!
 - support multiple guesses per line, and multiple guesses per...guesser
-- strip escape sequences (colors)
 - enhance `DEFINE-GUESSER` to extract documentation from the definition,
   and...maybe run it?  A la python's docstring
 - simplify `cg-fzf` to use `xargs` instead -- `xargs -t -I {} bash -c {}`
@@ -213,6 +232,8 @@ Next
 - Removed tmux plugin -- use
   [tmux-externalpipe](https://github.com/iamFIREcracker/tmux-externalpipe)
   instead
+- Add new section to readme, to explain how to strip colors from output before
+  passing that into `cg`
 
 0.2.0 (2019-05-21)
 
