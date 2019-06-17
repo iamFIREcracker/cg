@@ -192,7 +192,6 @@ push` a branch on GitHub, it will output a URL to create a pull request for the
 branch; the second time however, it won't, so the `readline` trick I explained
 above won't work in that case).
 
-# Extras
 
 ## Strip escape sequences (colors)
 
@@ -229,7 +228,6 @@ before invoking `cg`:
 # Todo
 
 - replace `LOAD`?!
-- support multiple guesses per...guesser
 - enhance `DEFINE-GUESSER` to extract documentation from the definition,
   and...maybe run it?  A la python's docstring
 - simplify `cg-fzf` to use `xargs` instead -- `xargs -t -I {} bash -c {}`
