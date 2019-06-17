@@ -243,6 +243,8 @@ Next
 
 - Keep on processing guessers, even after a first match (this makes it possible
   for users to generate multiple suggestions for the same input line)
+- Guessers can now return multiple suggestions (i.e. they should either return
+  a STRING, or a LIST (of strings))
 - Removed tmux plugin -- use
   [tmux-externalpipe](https://github.com/iamFIREcracker/tmux-externalpipe)
   instead

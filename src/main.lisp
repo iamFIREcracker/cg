@@ -55,7 +55,9 @@
   (loop
     :for fn :in guessers
     :for command = (funcall fn line)
-    :when command :collect it))
+    :unless command
+    :when (stringp command) :collect command
+    :when (consp command) :append command))
 
 (defun process-input ()
   (loop
