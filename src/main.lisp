@@ -55,18 +55,19 @@
   (loop
     :for fn :in guessers
     :for command = (funcall fn line)
-    :when command :return it))
+    :when command :collect it))
 
 (defun process-input ()
   (loop
     :with seen = (make-hash-table :test 'equal)
     :for line = (read-line NIL NIL :eof)
     :until (eq line :eof)
-    :for command = (guess line)
-    :when (and command (not (gethash command seen)))
-    :do (progn
-          (setf (gethash command seen) T)
-          (format T "~a~%" command))))
+    :do (loop
+          :for command :in (guess line)
+          :when (and command (not (gethash command seen)))
+          :do (progn
+                (setf (gethash command seen) T)
+                (format T "~a~%" command)))))
 
 (defun toplevel ()
   (parse-opts)

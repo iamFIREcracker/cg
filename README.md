@@ -229,7 +229,7 @@ before invoking `cg`:
 # Todo
 
 - replace `LOAD`?!
-- support multiple guesses per line, and multiple guesses per...guesser
+- support multiple guesses per...guesser
 - enhance `DEFINE-GUESSER` to extract documentation from the definition,
   and...maybe run it?  A la python's docstring
 - simplify `cg-fzf` to use `xargs` instead -- `xargs -t -I {} bash -c {}`
@@ -241,6 +241,8 @@ before invoking `cg`:
 
 Next
 
+- Keep on processing guessers, even after a first match (this makes it possible
+  for users to generate multiple suggestions for the same input line)
 - Removed tmux plugin -- use
   [tmux-externalpipe](https://github.com/iamFIREcracker/tmux-externalpipe)
   instead
