@@ -131,8 +131,6 @@ Hopefully, it should not take you long to implement adapters for other programs
 so that's what I will try to support going forward.
 
 ```
-#!/usr/bin/env bash
-
 cg-dmenu() {
   local commands
 
@@ -214,6 +212,20 @@ And then you will be able to use `strip-sequences` as follows:
 
     > g l | strip-sequences | cg
 
+## Process stderr too
+
+Sometimes programs, especially when something did not go as planned, prefer to
+print to stderr instead of stdout; as a consequence, some of your guessers would
+not work as expected when trying to pipe these commands output to `cg`.  A good
+example of this, is `rm(1)`: if you try to `rm` a directory which is not empty,
+it will bail out and print to stdout that the specified file is indeed
+a directory.
+
+Anyway, the solution is pretty simple, simply merge stderr and stdout together,
+before invoking `cg`:
+
+    > rm directory/ 2>&1 | cg
+
 # Todo
 
 - replace `LOAD`?!
@@ -233,7 +245,7 @@ Next
   [tmux-externalpipe](https://github.com/iamFIREcracker/tmux-externalpipe)
   instead
 - Add new section to readme, to explain how to strip colors from output before
-  passing that into `cg`
+  passing that into `cg`, how to pipe stderr into `cg` as well.
 
 0.2.0 (2019-05-21)
 
