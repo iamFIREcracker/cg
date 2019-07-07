@@ -237,7 +237,7 @@ before invoking `cg`:
 
 # Changelog
 
-Next
+0.3.0 (2019-07-07)
 
 - Keep on processing guessers, even after a first match (this makes it possible
   for users to generate multiple suggestions for the same input line)
@@ -247,7 +247,7 @@ Next
   [tmux-externalpipe](https://github.com/iamFIREcracker/tmux-externalpipe)
   instead
 - Add new section to readme, to explain how to strip colors from output before
-  passing that into `cg`, how to pipe stderr into `cg` as well.
+  passing that into `cg`, and how to pipe stderr into `cg` as well.
 
 0.2.0 (2019-05-21)
 
