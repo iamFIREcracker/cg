@@ -56,7 +56,6 @@
   (loop
     :for fn :in guessers
     :for command = (funcall fn line)
-    :unless command
     :when (stringp command) :collect command
     :when (consp command) :append command))
 
