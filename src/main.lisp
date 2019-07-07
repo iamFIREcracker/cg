@@ -13,6 +13,7 @@
      ',name))
 
 (defun load-rc (&key (debug NIL))
+  (setf *guessers* NIL)
   (load "~/.cgrc" :print debug))
 
 (opts:define-opts
