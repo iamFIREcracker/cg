@@ -22,5 +22,5 @@ binary-ros: bin $(lisps)
 binary: binary-sbcl
 
 # Install ---------------------------------------------------------------------
-install: binary
+install:
 	cp bin/cg* $(PREFIX)/

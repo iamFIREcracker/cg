@@ -40,7 +40,7 @@ Anyway, you have to options:
   implementations
 - Get yourself a [Quicklisp](https://www.quicklisp.org/beta/)
 - Clone this repo
-- Run `make install`
+- Run `make` followed by `make install`
 
 If everything run smoothly, a shiny little `cg` should have appeared under
 '$cgrepo/bin/'; if not then, you can try downloading one of the pre-compiled
