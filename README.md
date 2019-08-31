@@ -40,7 +40,7 @@ Anyway, you have to options:
   implementations
 - Get yourself a [Quicklisp](https://www.quicklisp.org/beta/)
 - Clone this repo
-- Run `make`
+- Run `make install`
 
 If everything run smoothly, a shiny little `cg` should have appeared under
 '$cgrepo/bin/'; if not then, you can try downloading one of the pre-compiled
@@ -60,6 +60,8 @@ You can manually download which one you need, or you can run the following:
 
 It will guess your OS, download the pre-compiled binary, place it inside 'bin',
 and make it executable.
+
+Finally run `make install` to install the executable globally.
 
 # Usage
 
