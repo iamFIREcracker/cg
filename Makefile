@@ -23,4 +23,4 @@ binary: binary-sbcl
 
 # Install ---------------------------------------------------------------------
 install:
-	cp bin/cg* $(PREFIX)/
+	cp bin/cg* $(PREFIX)/bin/
