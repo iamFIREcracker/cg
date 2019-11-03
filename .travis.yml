@@ -12,10 +12,19 @@ matrix:
         - DEST=cg-osx
     - os: windows
       language: shell
-      filter_secretes: false # goddammit, windows!
       env:
         - PATH=$PATH:/tmp/roswell
         - DEST=cg.exe
+
+before_install:
+  # 2019-10-30: Homebrew/brew.rb:23:in `require_relative': ...
+  # ... unexpected keyword_rescue, expecting keyword_end
+  # https://discourse.brew.sh/t/missing-file-homebrew-dead/5657
+  - if [ "$TRAVIS_OS_NAME" = osx ]; then
+      set -x &&
+      brew update-reset &&
+      set +x;
+    fi
 
 install:
   - curl -L https://gist.githubusercontent.com/iamFIREcracker/3564db5a24e296e087da49513d6cd00c/raw/4e356d00a98bb09c73c131c8c9db9f6fbd1cf018/roswell-install-for-ci.sh | sh
@@ -26,12 +35,10 @@ install:
 
 script:
   - make binary-ros
+  - bin/cg --version
 
 before_deploy:
-  - |
-    if [ "$TRAVIS_OS_NAME" != "windows" ]; then
-      mv bin/cg bin/$DEST
-    fi
+  - mv bin/cg bin/$DEST
 
 deploy:
   provider: releases
