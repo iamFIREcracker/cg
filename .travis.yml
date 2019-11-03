@@ -25,6 +25,8 @@ install:
 
 script:
   - make binary-ros
+  - bin/cg --help
+  - bin/cg --version
 
 before_deploy:
   - |
