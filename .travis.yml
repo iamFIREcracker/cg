@@ -12,7 +12,6 @@ matrix:
         - DEST=cg-osx
     - os: windows
       language: shell
-      filter_secretes: false # goddammit, windows!
       env:
         - PATH=$PATH:/tmp/roswell
         - DEST=cg.exe
