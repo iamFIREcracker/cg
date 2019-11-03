@@ -38,10 +38,7 @@ script:
   - bin/cg --version
 
 before_deploy:
-  - |
-    if [ "$TRAVIS_OS_NAME" != "windows" ]; then
-      mv bin/cg bin/$DEST
-    fi
+  - mv bin/cg bin/$DEST
 
 deploy:
   provider: releases
