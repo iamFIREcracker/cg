@@ -5,15 +5,19 @@ matrix:
     - os: linux
       sudo: required
       env:
+        - LISP=sbcl-bin/1.5.8
         - DEST=cg-linux
     - os: osx
       sudo: required
       env:
+        - LISP=sbcl/1.5.8
         - DEST=cg-osx
     - os: windows
       language: shell
       env:
-        - PATH=$PATH:/tmp/roswell
+        - PATH=~/.roswell/bin:$PATH
+        - LISP=sbcl-bin/1.4.14
+        - ROSWELL_INSTALL_DIR=$HOME/.roswell
         - DEST=cg.exe
 
 before_install:
@@ -27,7 +31,7 @@ before_install:
     fi
 
 install:
-  - curl -L https://gist.githubusercontent.com/iamFIREcracker/3564db5a24e296e087da49513d6cd00c/raw/4e356d00a98bb09c73c131c8c9db9f6fbd1cf018/roswell-install-for-ci.sh | sh
+  - curl -L https://raw.githubusercontent.com/roswell/roswell/v19.09.12.102/scripts/install-for-ci.sh | sh
   - |
     if [ "$TRAVIS_OS_NAME" = "windows" ]; then
       choco install make
