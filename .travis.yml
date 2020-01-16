@@ -1,5 +1,12 @@
 language: generic
 
+env:
+  global:
+    - PATH=~/.roswell/bin:$PATH
+    - ROSWELL_INSTALL_DIR=$HOME/.roswell
+    - ROSWELL_VERSION=19.12.13.103
+    - ROSWELL_URL="https://raw.githubusercontent.com/roswell/roswell/v$ROSWELL_VERSION/scripts/install-for-ci.sh"
+
 matrix:
   include:
     - os: linux
@@ -15,23 +22,11 @@ matrix:
     - os: windows
       language: shell
       env:
-        - PATH=~/.roswell/bin:$PATH
         - LISP=sbcl-bin/1.4.14
-        - ROSWELL_INSTALL_DIR=$HOME/.roswell
         - DEST=cg.exe
 
-before_install:
-  # 2019-10-30: Homebrew/brew.rb:23:in `require_relative': ...
-  # ... unexpected keyword_rescue, expecting keyword_end
-  # https://discourse.brew.sh/t/missing-file-homebrew-dead/5657
-  - if [ "$TRAVIS_OS_NAME" = osx ]; then
-      set -x &&
-      brew update-reset &&
-      set +x;
-    fi
-
 install:
-  - curl -L https://raw.githubusercontent.com/roswell/roswell/v19.09.12.102/scripts/install-for-ci.sh | sh
+  - curl -L $ROSWELL_URL | sh
   - |
     if [ "$TRAVIS_OS_NAME" = "windows" ]; then
       choco install make
