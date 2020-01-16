@@ -12,7 +12,7 @@ matrix:
     - os: linux
       sudo: required
       env:
-        - LISP=sbcl-bin/1.5.8
+        - LISP=sbcl/2.0.0
         - DEST=cg-linux
     - os: osx
       sudo: required
@@ -22,7 +22,7 @@ matrix:
     - os: windows
       language: shell
       env:
-        - LISP=sbcl-bin/1.4.14
+        - LISP=sbcl-bin/2.0.0
         - DEST=cg.exe
 
 install:
