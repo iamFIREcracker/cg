@@ -5,18 +5,18 @@ env:
   global:
     - PATH=~/.roswell/bin:$PATH
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
-    - ROSWELL_VERSION=20.01.14.104
+    - ROSWELL_VERSION=20.04.14.105
     - ROSWELL_URL="https://raw.githubusercontent.com/roswell/roswell/v$ROSWELL_VERSION/scripts/install-for-ci.sh"
 
 jobs:
   include:
     - os: linux
       env:
-        - LISP=sbcl/2.0.0
+        - LISP=sbcl/2.0.3
         - DEST=cg-linux
     - os: osx
       env:
-        - LISP=sbcl/2.0.0
+        - LISP=sbcl/2.0.3
         - DEST=cg-osx
     - os: windows
       language: shell
