@@ -4,7 +4,7 @@
   :author "Matteo Landi <matteo@matteolandi.net>"
   :license  "MIT"
 
-  :version "0.3.0"
+  :version "0.4.0"
 
   :depends-on (#:cl-ppcre #:unix-opts)
 

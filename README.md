@@ -239,7 +239,7 @@ before invoking `cg`:
 
 # Changelog
 
-Unreleased (2020-05-13)
+0.4.0 (2020-05-13)
 
 - Fix a problem where `cg` was printing anything to stdout when run from
   `cmd.exe` or `mintty.exe` on Windows.
