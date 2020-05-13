@@ -12,11 +12,11 @@ jobs:
   include:
     - os: linux
       env:
-        - LISP=sbcl/2.0.3
+        - LISP=sbcl/2.0.4
         - DEST=cg-linux
     - os: osx
       env:
-        - LISP=sbcl/2.0.3
+        - LISP=sbcl/2.0.4
         - DEST=cg-osx
     - os: windows
       language: shell
