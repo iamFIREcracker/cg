@@ -239,6 +239,20 @@ before invoking `cg`:
 
 # Changelog
 
+Unreleased (2020-05-13)
+
+- Fix a problem where `cg` was printing anything to stdout when run from
+  `cmd.exe` or `mintty.exe` on Windows.
+
+    # without `:deploy-console`
+    > cg --version
+    > cg --version | cat
+    0.3.0-r14
+
+    # with `:deploy-console`
+    > cg --version
+    0.3.0-r14
+
 0.3.0 (2019-07-07)
 
 - Keep on processing guessers, even after a first match (this makes it possible
