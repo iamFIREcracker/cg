@@ -1,4 +1,4 @@
-.PHONY: vendor clean binary-sbcl binary install
+.PHONY: clean binary-sbcl binary install
 
 PREFIX?=/usr/local
 lisps := $(shell find .  -type f \( -iname \*.asd -o -iname \*.lisp \))
@@ -14,10 +14,10 @@ bin:
 	mkdir -p bin
 
 binary-sbcl: bin $(lisps)
-	sbcl --noinform --load "src/build.lisp"
+	sbcl --noinform --load "build.lisp"
 
 binary-ros: bin $(lisps)
-	ros run -- --noinform --load "src/build.lisp"
+	ros run -- --noinform --load "build.lisp"
 
 binary: binary-sbcl
 

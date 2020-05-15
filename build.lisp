@@ -1,3 +1,5 @@
+(format t "~a/~a~&" (lisp-implementation-type) (lisp-implementation-version))
+
 (ql:quickload :deploy :silent T)
 
 ;; By adding the current directory to ql:*local-project-directories*, we can
