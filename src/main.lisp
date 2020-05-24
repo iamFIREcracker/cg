@@ -5,12 +5,12 @@
 
 (defmacro define-guesser (name (regexp group-list) &body body)
   `(let ((scanner (ppcre:create-scanner ,regexp :case-insensitive-mode t)))
-     (defun ,name (line)
-       (ppcre:register-groups-bind ,group-list
-         (scanner line :sharedp T)
-         ,@body))
-     (pushnew ',name *guessers*)
-     ',name))
+    (defun ,name (line)
+      (ppcre:register-groups-bind ,group-list
+        (scanner line :sharedp T)
+        ,@body))
+    (pushnew ',name *guessers*)
+    ',name))
 
 (defun load-rc (&key (debug NIL))
   (setf *guessers* NIL)
@@ -18,25 +18,25 @@
 
 (opts:define-opts
   (:name :help
-         :description "print the help text and exit"
-         :short #\h
-         :long "help")
+   :description "print the help text and exit"
+   :short #\h
+   :long "help")
   (:name :version
-         :description "print the version and exit"
-         :short #\v
-         :long "version")
+   :description "print the version and exit"
+   :short #\v
+   :long "version")
   (:name :debug
-         :description "parse the RC file and exit"
-         :short #\d
-         :long "debug"))
+   :description "parse the RC file and exit"
+   :short #\d
+   :long "debug"))
 
 (defun parse-opts ()
   (multiple-value-bind (options)
-    (handler-case
-        (opts:get-opts)
-      (opts:unknown-option (condition)
-        (format t "~s option is unknown!~%" (opts:option condition))
-        (opts:exit 1)))
+      (handler-case
+          (opts:get-opts)
+        (opts:unknown-option (condition)
+          (format t "~s option is unknown!~%" (opts:option condition))
+          (opts:exit 1)))
     (if (getf options :help)
       (progn
         (opts:describe
