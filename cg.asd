@@ -16,5 +16,5 @@
   :serial t
   :components ((:file "package")
                (:module "src" :serial t
-                        :components
-                        ((:file "main")))))
+                :components
+                ((:file "main")))))

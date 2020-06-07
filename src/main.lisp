@@ -32,8 +32,7 @@
 
 (defun parse-opts ()
   (multiple-value-bind (options)
-      (handler-case
-          (opts:get-opts)
+      (handler-case (opts:get-opts)
         (opts:unknown-option (condition)
           (format t "~s option is unknown!~%" (opts:option condition))
           (opts:exit 1)))

@@ -1,6 +1,6 @@
 (defpackage #:cg
   (:use #:cl)
   (:export
-    :*version*
-    :define-guesser
-    :toplevel))
+   :*version*
+   :define-guesser
+   :toplevel))

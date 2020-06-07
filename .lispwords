@@ -1,1 +1,9 @@
-(register-groups-bind 1)
+; ppcre
+(1 register-groups-bind)
+
+(0 loop)
+(1 if)
+(1 handler-case)
+(1 let)
+(1 let*)
+(2 multiple-value-bind)
