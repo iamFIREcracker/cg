@@ -1,0 +1,119 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+env:
+  ROSWELL_VERSION_TAG: v21.06.14.110
+
+jobs:
+
+  build:
+    strategy:
+      fail-fast: false # Let the workflow continue as much as possible
+      matrix:
+        include:
+          - os: windows-latest
+            shell: 'msys2 {0}'
+            lisp: sbcl-bin/2.1.8
+            destination: cg.exe
+
+          - os: ubuntu-latest
+            shell: bash
+            lisp: sbcl-bin/2.1.8
+            destination: cg-linux
+
+          - os: macos-latest
+            shell: bash
+            lisp: sbcl-bin/2.1.8
+            destination: cg-osx
+
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    env:
+      LISP: ${{ matrix.lisp }}
+
+    name: build with ${{ matrix.lisp }} on ${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - uses: msys2/setup-msys2@v2
+        if: matrix.os == 'windows-latest'
+        with:
+          install: make unzip
+
+      - name: Set up roswell to run on Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo "ROSWELL_INSTALL_DIR=/usr/local" >> $GITHUB_ENV
+
+      - name: Set up caching for roswell files
+        id: cache-dot-roswell
+        uses: actions/cache@v1
+        with:
+          path: ~/.roswell
+          key: ${{ runner.os }}-dot-roswell-${{ matrix.lisp }}-${{ hashFiles('**/*.asd') }}
+          restore-keys: |
+            ${{ runner.os }}-dot-roswell-${{ matrix.lisp }}-
+            ${{ runner.os }}-dot-roswell-
+
+      - name: Install roswell
+        run: curl -L https://raw.githubusercontent.com/roswell/roswell/${{ env.ROSWELL_VERSION_TAG }}/scripts/install-for-ci.sh | sh -x
+
+      - name: Update ql dist if we have one cached
+        run: ros -e "(ql:update-all-dists :prompt nil)"
+
+      - uses: actions/checkout@v2
+
+      - name: Build the executable
+        run: |
+          make binary-ros
+          bin/cg --version
+          mv bin/cg bin/${{ matrix.destination }}
+
+      - name: Upload the executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: executables
+          path: bin/${{ matrix.destination }}
+
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+
+    needs: [build]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: executables
+          path: bin/
+
+      - name: Extract release notes
+        id: extract-release-notes
+        uses: ffurrer2/extract-release-notes@v1
+
+      - name: Debug
+        run: |
+          ls -al bin/
+          echo "${{  steps.extract-release-notes.outputs.release_notes }}"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
+          tag_name: ${{ github.ref }}
+          name: ${{ github.ref }}
+          body: ${{ steps.extract-release-notes.outputs.release_notes }}
+          files: bin/*
