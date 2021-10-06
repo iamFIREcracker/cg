@@ -19,4 +19,8 @@
 ;;   application.
 (pushnew :deploy-console *features*)
 
-(asdf:make :cg :force t)
+;; Disable :deploy status messages for the final binary
+;; but enable it during the build process
+(setf deploy:*status-output* nil)
+(let ((deploy:*status-output* t))
+  (asdf:make :cg :force t))
