@@ -16,30 +16,23 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            shell: bash
             lisp: sbcl-bin
             destination: cg.exe
           - os: ubuntu-latest
-            shell: bash
             lisp: sbcl-bin
             destination: cg-linux
           - os: macos-latest
-            shell: bash
             lisp: sbcl-bin
             destination: cg-osx
     defaults:
       run:
-        shell: ${{ matrix.shell }}
+        shell: lispsh {0}
     env:
       LISP: ${{ matrix.lisp }}
     name: build with ${{ matrix.lisp }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: iamFIREcracker/setup-lisp@windows-work
-        with:
-          roswell-version: v21.06.14.110
-      - name: Update ql dist if we have one cached
-        run: ros -e '(ql:update-all-dists :prompt nil)'
+      - uses: 40ants/setup-lisp@v2
       - name: Set up caching for roswell files
         id: cache-dot-roswell
         uses: actions/cache@v1
