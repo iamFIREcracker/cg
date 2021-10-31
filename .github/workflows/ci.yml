@@ -103,7 +103,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
           prerelease: false
-          tag_name: ${{ github.ref }}
-          name: ${{ github.ref }}
           body: ${{ steps.extract-release-notes.outputs.release_notes }}
           files: bin/*
