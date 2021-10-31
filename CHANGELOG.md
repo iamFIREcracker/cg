@@ -6,7 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Build against sbcl-bin/2.1.8, on Windows, Linux, and MacOS
+- Bump dependencies:
+
+  -- Roswell: v21.10.14.111
+  -- SBCL: 2.1.10 (on Linux, MacOS, and Windows)
+  -- Quicklisp dist: 2021-10-21
+  -- ASDF: 3.3.5.3
 
 ## [0.4.0] - 2020-05-13
 ### Fixed

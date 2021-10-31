@@ -16,23 +16,36 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            lisp: sbcl-bin
+            lisp: sbcl-bin/2.1.10
             destination: cg.exe
           - os: ubuntu-latest
-            lisp: sbcl-bin
+            lisp: sbcl-bi/2.1.10
             destination: cg-linux
           - os: macos-latest
-            lisp: sbcl-bin
+            lisp: sbcl-bi/2.1.10
             destination: cg-osx
     defaults:
       run:
         shell: lispsh {0}
-    env:
-      LISP: ${{ matrix.lisp }}
     name: build with ${{ matrix.lisp }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: 40ants/setup-lisp@v2
+        if: github.event_name != 'schedule'
+        with:
+          roswell-version: v21.10.14.111
+          asdf-version: 3.3.5.3
+          qlot-version: 0.11.5
+        env:
+          LISP: ${{ matrix.lisp }}
+      - uses: 40ants/setup-lisp@v2
+        if: github.event_name == 'schedule'
+        with:
+          roswell-version: latest
+          asdf-version: 3.3.5.3 # latest is currently broken https://github.com/roswell/roswell/issues/497
+          qlot-version: latest
+        env:
+          LISP: sbcl-bin
       - name: Set up caching for roswell files
         id: cache-dot-roswell
         uses: actions/cache@v1
