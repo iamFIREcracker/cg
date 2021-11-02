@@ -58,14 +58,14 @@ You can manually download which one you need, or you can run the following:
 
     ./download
 
-It will guess your OS, download the pre-compiled binary, place it inside 'bin',
-and make it executable.
+It will guess your OS, download the pre-compiled binary, place it inside
+'bin/', and make it executable.
 
 Finally run `make install` to install the executable globally.
 
 # Usage
 
-    > cg -h
+    $ cg -h
     Guess commands to run from stdin, and print them to stdout.
 
     Available options:
@@ -76,13 +76,13 @@ Finally run `make install` to install the executable globally.
 Using `cg` is really simple: you just pipe some text into it, and it will
 output some commands you most likely would want to run next:
 
-    > git l
+    $ git l
     224d33a Fix some copy-pasta (HEAD -> master, origin/master) (by Matteo Landi)
     6fb3f7b Add support for multi item selection (by Matteo Landi)
     56c332c Do not specify sbcl full path (by Matteo Landi)
     ...
 
-    > g l | cg
+    $ g l | cg
     git show '224d33a' # Fix some copy-pasta (HEAD -> master, origin/master) (by Matteo Landi)
     git show '6fb3f7b' # Add support for multi item selection (by Matteo Landi)
     git show '56c332c' # Do not specify sbcl full path (by Matteo Landi)
@@ -211,7 +211,7 @@ function strip-sequences {
 
 And then you will be able to use `strip-sequences` as follows:
 
-    > g l | strip-sequences | cg
+    $ g l | strip-sequences | cg
 
 ## Process stderr too
 
@@ -225,7 +225,7 @@ a directory.
 Anyway, the solution is pretty simple, simply merge stderr and stdout together,
 before invoking `cg`:
 
-    > rm directory/ 2>&1 | cg
+    $ rm directory/ 2>&1 | cg
 
 # Todo
 
