@@ -25,7 +25,7 @@ binary: binary-sbcl
 
 .PHONY: binary-sbcl
 binary-sbcl: bin $(lisps)
-	sbcl --noinform \
+	sbcl --noinform --quit \
 		--load "build/setup.lisp" \
 		--load "build/build.lisp"
 
