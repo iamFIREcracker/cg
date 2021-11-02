@@ -7,22 +7,64 @@ on:
     - cron: "0 0 * * SUN"
 
 jobs:
+  ci-config:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.set-enabled.outputs.enabled }}
+      roswell-version: ${{ steps.set-deps-versions.outputs.roswell-version }}
+      asdf-version: ${{ steps.set-deps-versions.outputs.asdf-version }}
+      qlot-version: ${{ steps.set-deps-versions.outputs.qlot-version }}
+    steps:
+      - id: set-enabled
+        name: Set enabled
+        run: |
+          event_name=${{ github.event_name }}
+          pull_request_repo=${{ github.event.pull_request.head.repo.full_name }}
+          repo=${{ github.repository }}
+
+          enabled=no
+          # We want to run on external PRs, but not on our own internal PRs as
+          # they'll be run by the push to the branch.
+          if test "$event_name" != 'pull_request' -o "$pull_request_repo" != "$repo"
+          then
+            enabled=yes
+          fi
+          echo "::set-output name=enabled::$enabled"
+      - id: set-deps-versions
+        name: Set dependencies versions
+        run: |
+          event_name=${{ github.event_name }}
+
+          roswell_version=v21.10.14.111
+          asdf_version=3.3.5.3
+          qlot_version=0.11.5
+          if [[ $event_name == 'schedule' ]]; then
+            roswell_version=latest
+            # XXX remove this override (i.e. put "latest" back in) after the
+            # following roswell issue has been solved:
+            # https://github.com/roswell/roswell/issues/497
+            # asdf_version=latest
+            asdf_version=3.3.5.3
+            qlot_version=latest
+          fi
+          echo "::set-output name=roswell-version::$roswell_version"
+          echo "::set-output name=asdf-version::$asdf_version"
+          echo "::set-output name=qlot-version::$qlot_version"
+
   build:
-    # We want to run on external PRs, but not on our own internal PRs as
-    # they'll be run by the push to the branch.
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
+    needs: ci-config
+    if: needs.ci-config.outputs.enabled == 'yes'
     strategy:
       fail-fast: false # Let the workflow continue as much as possible
       matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        lisp: [ sbcl-bin/2.1.10 ]
         include:
           - os: windows-latest
-            lisp: sbcl-bin/2.1.10
             destination: cg.exe
           - os: ubuntu-latest
-            lisp: sbcl-bi/2.1.10
             destination: cg-linux
           - os: macos-latest
-            lisp: sbcl-bi/2.1.10
             destination: cg-osx
     defaults:
       run:
@@ -31,30 +73,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: 40ants/setup-lisp@v2
-        if: github.event_name != 'schedule'
         with:
-          roswell-version: v21.10.14.111
-          asdf-version: 3.3.5.3
-          qlot-version: 0.11.5
-        env:
-          LISP: ${{ matrix.lisp }}
-      - uses: 40ants/setup-lisp@v2
-        if: github.event_name == 'schedule'
-        with:
-          roswell-version: latest
-          asdf-version: 3.3.5.3 # latest is currently broken https://github.com/roswell/roswell/issues/497
-          qlot-version: latest
-        env:
-          LISP: sbcl-bin
-      - name: Set up caching for roswell files
-        id: cache-dot-roswell
-        uses: actions/cache@v1
-        with:
-          path: ~/.roswell
-          key: ${{ runner.os }}-dot-roswell-${{ matrix.lisp }}-${{ hashFiles('**/*.asd') }}
-          restore-keys: |
-            ${{ runner.os }}-dot-roswell-${{ matrix.lisp }}-
-            ${{ runner.os }}-dot-roswell-
+          roswell-version: ${{ needs.ci-config.outputs.roswell-version }}
+          asdf-version: ${{ needs.ci-config.outputs.asdf-version }}
+          qlot-version: ${{ needs.ci-config.outputs.qlot-version }}
       - uses: actions/checkout@v2
         with:
           # By default, this action would fetch a single commit only;
@@ -65,10 +87,9 @@ jobs:
           #
           # Fetching the complete history will do just fine.
           fetch-depth: 0
-      - name: Build the binary
-        run: |
-          make binary-ros
-          mv bin/cg bin/${{ matrix.destination }}
+      - run: make lisp-info-ros
+      - run: make binary-ros
+      - run: mv bin/cg bin/${{ matrix.destination }}
       - name: Test loading of custom .cgrc
         run: |
           bin/${{ matrix.destination }} --version
@@ -84,6 +105,7 @@ jobs:
         with:
           name: binaries
           path: bin/${{ matrix.destination }}
+
   release:
     if: startsWith(github.ref, 'refs/tags/')
     needs: [build]

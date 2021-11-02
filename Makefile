@@ -1,38 +1,44 @@
-.PHONY: clean binary binary-ros binary-sbcl install lisp-info lisp-info-ros
-
 PREFIX?=/usr/local
 lisps := $(shell find .  -type f \( -iname \*.asd -o -iname \*.lisp \))
 
 all: binary
 
 # Clean -----------------------------------------------------------------------
+.PHONY: clean
 clean:
 	rm -rf bin
 
-# Build -----------------------------------------------------------------------
-bin:
-	mkdir -p bin
-
+# Info ------------------------------------------------------------------------
+.PHONY: lisp-info
 lisp-info:
 	sbcl --noinform --quit \
 		--load "build/info.lisp"
 
-binary-sbcl: lisp-info bin $(lisps)
+.PHONY: lisp-info-ros
+lisp-info-ros:
+	ros run \
+		--load "build/info.lisp"
+
+# Build -----------------------------------------------------------------------
+.PHONY: binary
+binary: binary-sbcl
+
+.PHONY: binary-sbcl
+binary-sbcl: bin $(lisps)
 	sbcl --noinform \
 		--load "build/setup.lisp" \
 		--load "build/build.lisp"
 
-lisp-info-ros:
-	ros run -- --noinform --quit \
-		--load "build/info.lisp"
-
-binary-ros: lisp-info-ros bin $(lisps)
-	ros run -- --noinform \
+.PHONY: binary-ros
+binary-ros: bin $(lisps)
+	ros run \
 		--load "build/setup.lisp" \
 		--load "build/build.lisp"
 
-binary: binary-sbcl
+bin:
+	mkdir -p bin
 
 # Install ---------------------------------------------------------------------
+.PHONY: install
 install:
 	cp bin/cg* $(PREFIX)/bin/
