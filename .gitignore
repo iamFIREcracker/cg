@@ -1,2 +1,4 @@
 bin/
 system-index.txt
+/.common-lisp/
+/.quicklisp/
