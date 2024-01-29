@@ -41,11 +41,7 @@ jobs:
           qlot_version=0.11.5
           if [[ $event_name == 'schedule' ]]; then
             roswell_version=latest
-            # XXX remove this override (i.e. put "latest" back in) after the
-            # following roswell issue has been solved:
-            # https://github.com/roswell/roswell/issues/497
-            # asdf_version=latest
-            asdf_version=3.3.5.3
+            asdf_version=latest
             qlot_version=latest
           fi
           echo "::set-output name=roswell-version::$roswell_version"
@@ -90,7 +86,18 @@ jobs:
           fetch-depth: 0
       - run: make lisp-info-ros
       - run: make binary-ros
-      - run: mv bin/cg bin/${{ matrix.destination }}
+      - run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            # On Windows, `mv` might fail with the following error message:
+            #
+            #   mv: 'bin/cg' and 'bin/cg.exe' are the same file
+            #
+            # So here we just check that the binary is where it should be
+            # would fail if the mv operation had failed
+            test -f bin/${{ matrix.destination }}
+          else
+            mv bin/cg bin/${{ matrix.destination }}
+          fi
       - name: Test loading of custom .cgrc
         run: |
           bin/${{ matrix.destination }} --version
