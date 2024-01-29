@@ -59,7 +59,7 @@ jobs:
       fail-fast: false # Let the workflow continue as much as possible
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        lisp: [ sbcl-bin/2.1.10 ]
+        lisp: [ sbcl-bin/2.4.1 ]
         include:
           - os: windows-latest
             destination: cg.exe
