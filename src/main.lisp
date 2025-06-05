@@ -30,9 +30,9 @@
    :short #\d
    :long "debug"))
 
-(defun parse-opts ()
+(defun parse-opts (&optional argv)
   (multiple-value-bind (options)
-      (handler-case (opts:get-opts)
+      (handler-case (opts:get-opts argv)
         (opts:unknown-option (condition)
           (format t "~s option is unknown!~%" (opts:option condition))
           (opts:exit 1)))
@@ -70,7 +70,7 @@
                 (setf (gethash command seen) T)
                 (format T "~a~%" command)))))
 
-(defun toplevel ()
-  (parse-opts)
+(defun toplevel (&rest argv)
+  (parse-opts argv)
   (load-rc)
   (process-input))
